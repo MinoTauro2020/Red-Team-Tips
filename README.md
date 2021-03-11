@@ -3,4 +3,4 @@
 All checks to complete your Red-Team-Exercise
 
 1 - Recon DNS \
-2 - Email \
+2 - Email 
