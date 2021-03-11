@@ -19,5 +19,4 @@ osint.sh       + ip + technologies + services + historyDns
 Permute all subdomains to take more results and take brute force to all domains and subdomains
 dnsgen
 subbrute
--------------------------------------Check SPF, DMARK, DKIM ----------------------------
-Spoofcheck
+
