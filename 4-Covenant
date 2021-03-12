@@ -74,6 +74,27 @@ New-Item -Path "HKCU:Software\Classes\CLSID" -Name "{clsid}"
 New-Item -Path "HKCU:Software\Classes\CLSID\{clsid}" -Name "InprocServer32" -Value "C:\Users\Rasta\Desktop\COMTest.dll"
 New-ItemProperty -Path "HKCU:Software\Classes\CLSID\{clsid}\InprocServer32" -Name "ThreadingModel" -Value "Both"
 
+FIND COM WITH TASK SCHELUDER WITH THIS SCRIPT
+$Tasks = Get-ScheduledTask
+
+foreach ($Task in $Tasks)
+{
+    if ($Task.Actions.ClassId -ne $null)
+    {
+        if ($Task.Triggers.Enabled -eq $true)
+        {
+            if ($Task.Principal.GroupId -eq "Users")
+            {
+                Write-Host "Task Name: " $Task.TaskName
+                Write-Host "Task Path: " $Task.TaskPath
+                Write-Host "CLSID: " $Task.Actions.ClassId
+                Write-Host
+            }
+        }
+    }
+}
+
+
 
  
  
