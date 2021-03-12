@@ -45,7 +45,11 @@
  HKEY_CURRENT_USER\Software\Classes
  
  #Hunting COM Hijacks
-
+Run ProcessMonitor Procmon - Sysinternals Suite
+RegOpenKey operations
+where the Result is NAME NOT FOUND
+and the Path ends with InprocServer32
+DLL_PROCESS_ATTACH 
  
  
   
