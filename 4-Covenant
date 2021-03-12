@@ -50,6 +50,31 @@ RegOpenKey operations
 where the Result is NAME NOT FOUND
 and the Path ends with InprocServer32
 DLL_PROCESS_ATTACH 
+1-Complie DLL
+#include "stdafx.h"
+
+BOOL APIENTRY DllMain( HMODULE hModule,
+                       DWORD  ul_reason_for_call,
+                       LPVOID lpReserved
+					 )
+{
+	switch (ul_reason_for_call)
+	{
+	case DLL_PROCESS_ATTACH:
+	case DLL_THREAD_ATTACH:
+	case DLL_THREAD_DETACH:
+	case DLL_PROCESS_DETACH:
+		break;
+	}
+	return TRUE;
+}
+2- Select CLSID
+3 - Make DLL
+New-Item -Path "HKCU:Software\Classes\CLSID" -Name "{clsid}"
+New-Item -Path "HKCU:Software\Classes\CLSID\{clsid}" -Name "InprocServer32" -Value "C:\Users\Rasta\Desktop\COMTest.dll"
+New-ItemProperty -Path "HKCU:Software\Classes\CLSID\{clsid}\InprocServer32" -Name "ThreadingModel" -Value "Both"
+
+
  
  
   
