@@ -94,11 +94,17 @@ foreach ($Task in $Tasks)
     }
 }
 
+Get-Item -Path "Registry::HKCR\CLSID\{2DEA658F-54C1-4227-AF9B-260AB5FC3543}" | ft -AutoSize
+Get-ChildItem -Path "Registry::HKCR\CLSID\{2DEA658F-54C1-4227-AF9B-260AB5FC3543}" | ft -AutoSize
 
-
- 
- 
+#WMI Subscriptions
+ PersistWMI
+ You have to be local admin
+ Infect ProcessName such notepad
+ Other alternative:
+ https://github.com/Sw4mpf0x/PowerLurk
   
+
  
  
  
