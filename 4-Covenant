@@ -3,11 +3,11 @@
  Keylogger 30
  PortScan fs-1,dc-1 135,445,3389,4444,5985 
  
- #PERSISTENCE
+#PERSISTENCE
  PersistStartup
  C:\Users\j.hunt\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup
  ----------------
- #Scheduled Task
+#Scheduled Task
  PowerShellImport
  function New-ScheduledTaskPersistence {
 
@@ -33,16 +33,21 @@
  
  PowerShell Get-ScheduledTask -TaskName Persistence
  -----------------------------------------
- #Registry Autoruns
+#Registry Autoruns
  
   PersistAutorun
   Upload .exe form Covenant
   C:\Users\users\AppData\Local\Temp\payload.exe
   GetRegistryKey HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Run
   
- #COM Hijacking
+#COM Hijacking
  HKEY_CLASSES_ROOT\CLSID and HKEY_CLASSES_ROOT\Interface
  HKEY_CURRENT_USER\Software\Classes
+ 
+ #Hunting COM Hijacks
+
+ 
+ 
   
  
  
