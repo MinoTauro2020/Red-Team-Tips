@@ -55,7 +55,9 @@ $com.Document.ActiveView.Document.ActiveView.Document.ActiveView | Get-Member
 ProcessList / p
 Session 1 , 2 , 3 --- users
 Session 0 system
-If you are in session 0 sometimes you can not view somethings
+If you are in session 0 sometimes you can not view somethings , the migrate to another process
+ps
+Inject 1234
 
 
  
