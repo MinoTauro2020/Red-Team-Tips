@@ -1,0 +1,11 @@
+#Domain Reconnaissance
+Powerview
+https://github.com/PowerShellMafia/PowerSploit/blob/master/Recon/PowerView.ps1
+https://github.com/PowerShellMafia/PowerSploit/tree/dev/Recon
+#SharpView
+https://github.com/tevora-threat/SharpView
+---
+Use PowerShellImport (for Covenant) or powershell-import (for Cobalt Strike) with PowerSploit > Recon > PowerView.ps1.
+---
+
+
