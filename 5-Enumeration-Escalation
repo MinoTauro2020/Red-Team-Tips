@@ -33,6 +33,11 @@ Shell sc stop "service"
 shell sc start "service"
 connect localhost namesmbgrunt
 
+#Unquoted Service Paths
+An unquoted service path is where the path to the service binary is not wrapped in quotes.
+wmic service get name, pathname
+
+
 
 
 
