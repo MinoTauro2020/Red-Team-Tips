@@ -31,6 +31,7 @@ Shell sc config "service" binPath= "C:\Windows\Temp\GruntSMB"
 Shell sc qc "service"
 Shell sc stop "service"
 shell sc start "service"
+shell sc start "service"
 connect localhost namesmbgrunt
 
 #Unquoted Service Paths
