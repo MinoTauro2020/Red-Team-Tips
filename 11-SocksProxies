@@ -1,0 +1,7 @@
+#SOCKS Proxies
+ use auxiliary/server/socks4a
+ route add 10.10.120.0/23 1
+ /etc/proxychains.conf 
+ socks4 127.0.0.1 1080
+ 
+ with proxy no ICMP(pings) no (SYN)
