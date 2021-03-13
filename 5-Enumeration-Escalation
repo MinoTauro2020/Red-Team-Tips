@@ -1,0 +1,18 @@
+# Escalation
+https://github.com/rasta-mouse/Watson
+https://github.com/PowerShellMafia/PowerSploit/blob/dev/Privesc/PowerUp.ps1
+https://github.com/GhostPack/SharpUp
+
+#SMB
+
+#Covenant
+WhoAmI
+PowerShell Find-DomainShare -CheckAccess
+PowerShell Find-InterestingDomainShareFile -Include *admin*
+PowerShell Get-SQLInstanceDomain | Get-SQLConnectionTestThreaded | ? { $_.Status -eq 'Accessible' } | Get-SQLColumnSampleDataThreaded -SampleSize 5 -Keywords 'student,name' -NoDefaults | select instance, database, column, sample | ft -autosize
+
+
+
+
+
+
