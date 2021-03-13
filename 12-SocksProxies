@@ -26,6 +26,20 @@ METASPLOIT
 msfconsole -q
 setg Proxies socks4:127.0.0.1:1080
 
+#Reverse Port Forwards
+netsh interface portproxy add v4tov4 listenport=8080 listenaddress=0.0.0.0 connectport=80 connectaddress=x.x.x.x
+netsh advfirewall firewall add rule name="Totally Legit Rule" dir=in action=allow protocol=TCP localport=8080
+Metasploit
+sessions 1
+portfwd add -R -p 8080 -l 80 -L ip
+
+
+
+
+
+
+
+
 
 
 
