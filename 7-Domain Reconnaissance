@@ -27,6 +27,10 @@ PowerShell Get-NetLoggedOn
 PowerShell Get-NetSession -ComputerName fs-1 | Select-Object CName, UserName
 PowerShell Get-DomainTrust
 
+The best way 
+BloodHound
+Assembly /assemblyname:"SharpHound3" /parameters:"-c All GPOLocalGroup"
+"Execute bloohound with user with more privileges , the result will be diferent"
 
 
 
