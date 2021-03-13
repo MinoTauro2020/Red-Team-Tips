@@ -1,0 +1,26 @@
+#Mimikatz or SafetyKatz
+
+Mimikatz sekurlsa::logonpasswords
+
+NTLM + JOHN OR HASCAT
+
+Security Account Manager SAM
+
+Mimikatz token::elevate lsadump::sam
+
+Mimikatz token::elevate lsadump::cache
+
+
+#Token Impersonation
+Local Admin Required
+
+ImpersonateProcess
+ImpersonateUser
+Impersonated token RevToSelf
+
+
+ 
+
+
+
+
