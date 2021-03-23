@@ -15,3 +15,7 @@ PowerShell Get-DomainComputer -Unconstrained -Properties DnsHostName
 
 https://resources.infosecinstitute.com/topic/active-directory-series-unconstrained-delegation/
 
+#GPO-ABUSE
+https://www.flu-project.com/2020/12/jugando-con-gpos-2.html
+
+
