@@ -1,0 +1,7 @@
+# APPLOCKER
+Find  GpcFileSysPath of the GPO
+KeyName     : Software\Policies\Microsoft\Windows\SrpV2\Script\9428c672-5fc3-47f4-808a-a0011f36dd2c
+KeyName     : Software\Policies\Microsoft\Windows\SrpV2\Exe\451f43f7-5300-4991-b9ca-73b0c17150de
+KeyName     : Software\Policies\Microsoft\Windows\SrpV2\Exe\f9ec2ad9-2412-431e-adc8-e5280802cb17
+
+              
