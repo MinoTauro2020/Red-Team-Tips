@@ -490,7 +490,9 @@ ThreatCheck.exe -f C:\Users\Rasta\Downloads\GruntExecutor.bin -e AMSI
 Software\Policies\Microsoft\Windows\SrpV2\Script\9428c672-5fc3-47f4-808a-a0011f36dd2c
 rundll32.exe
 
-
+-------------------------------------------------------------------
+BLOODHOUND-TIPS
+https://medium.com/@riccardo.ancarani94/bloodhound-tips-and-tricks-e1853c4b81ad
 
 
 
