@@ -493,8 +493,18 @@ rundll32.exe
 -------------------------------------------------------------------
 BLOODHOUND-TIPS
 https://medium.com/@riccardo.ancarani94/bloodhound-tips-and-tricks-e1853c4b81ad
+Mark user as owned
+MATCH (n:User)WHERE n.hasspn=true RETURN n
+MATCH (dc:Computer)-[:MemberOf*1..]->(g:Group) WHERE g.objectsid ENDS WITH "516" WITH COLLECT(dc) as domainControllers MATCH p = (d:Domain)-[:Contains*1..]->(c:Computer {unconstraineddelegation:true}) WHERE NOT c in domainControllers RETURN c
+MATCH (dc:Computer)-[:MemberOf*1..]->(g:Group) WHERE g.objectsid ENDS WITH "516" WITH COLLECT(dc) as domainControllers MATCH p = (d:Domain)-[:Contains*1..]->(c:Computer {unconstraineddelegation:true}) WHERE NOT c in domainControllers SET c.highvalue = true RETURN c
+DOMAIN ADMINS@
+Info
+Reachable
+MATCH p=shortestPath((c {owned: true})-[*1..3]->(s)) WHERE NOT c = s RETURN p
+MATCH p=shortestPath((c {owned: true})-[*1..]->(s:Computer)) WHERE NOT c = s RETURN p
 
-
+GPO ABUSE
+https://wald0.com/?p=112
 
 
 
